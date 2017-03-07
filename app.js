@@ -185,17 +185,18 @@ function handleEcho(messageId, appId, metadata) {
 function handleApiAiAction(sender, action, responseText, contexts, parameters) {
 	switch (action) {
 		case 'hiring-application-details':
-			if (isDefined(contexts[0] && contexts[0].name == 'job_application' && contexts[0].parameters)) {
+			if (isDefined(contexts[0] && contexts[0].name == 'hiring-apply' && contexts[0].parameters)) {
 				let user_name = (isDefined(contexts[0].parameters['user-name']) &&
 				(contexts[0].parameters['user-name'] !== '') ? contexts[0].parameters['user-name'] : 'No Name Provided.');
 				let job_apply = (isDefined(contexts[0].parameters['job-apply']) &&
 				(contexts[0].parameters['job-apply'] !== '') ? contexts[0].parameters['job-apply'] : 'No Job Position Provided.');
 				let current_job = (isDefined(contexts[0].parameters['current_job']) &&
-				(contexts[0].parameters['current_job'] !== '') ? contexts[0].parameters['current_job'] : 'No Previous Job Provided.');			
+				(contexts[0].parameters['current_job'] !== '') ? contexts[0].parameters['current_job'] : 'No Previous Job Provided.');	
+
+				let emailContent = 'You have received a job inquiry from ' + user_name + ' for the job ' + job_apply + '. This person is currently a ' + current_job + '.';
+				sendEmailMessage('New Job Inquiry', emailContent);		
 			}
 
-			let emailContent = 'You have received a job inquiry from ' + user_name + ' for the job ' + job_apply + '. This person is currently a ' + current_job + '.';
-			sendEmailMessage('New Job Inquiry', emailContent);
 			sendTextMessage(sender, responseText);
 			break;
 		default:
