@@ -184,7 +184,7 @@ function handleEcho(messageId, appId, metadata) {
 
 function handleApiAiAction(sender, action, responseText, contexts, parameters) {
 	switch (action) {
-		case 'detailed-application':
+		case 'hiring-application-details':
 			if (isDefined(contexts[0] && contexts[0].name == 'job_application' && contexts[0].parameters)) {
 				let user_name = (isDefined(contexts[0].parameters['user-name']) &&
 				(contexts[0].parameters['user-name'] !== '') ? contexts[0].parameters['user-name'] : 'No Name Provided.');
