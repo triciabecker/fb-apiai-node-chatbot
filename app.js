@@ -190,8 +190,8 @@ function handleApiAiAction(sender, action, responseText, contexts, parameters) {
 				(contexts[0].parameters['user-name'] !== '') ? contexts[0].parameters['user-name'] : 'No Name Provided.');
 				let job_apply = (isDefined(contexts[0].parameters['job-apply']) &&
 				(contexts[0].parameters['job-apply'] !== '') ? contexts[0].parameters['job-apply'] : 'No Job Position Provided.');
-				let current_job = (isDefined(contexts[0].parameters['current_job']) &&
-				(contexts[0].parameters['current_job'] !== '') ? contexts[0].parameters['current_job'] : 'No Previous Job Provided.');	
+				let current_job = (isDefined(contexts[0].parameters['current-job']) &&
+				(contexts[0].parameters['current-job'] !== '') ? contexts[0].parameters['current-job'] : 'No Previous Job Provided.');	
 
 				let emailContent = 'You have received a job inquiry from ' + user_name + ' for the job ' + job_apply + '. This person is currently a ' + current_job + '.';
 				sendEmailMessage('New Job Inquiry', emailContent);		
