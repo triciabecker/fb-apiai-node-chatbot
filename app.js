@@ -104,13 +104,25 @@ function handleApiAiAction(sender, action, responseText, contexts, parameters) {
         let emailContent = 'You have received a job inquiry from ' + user_name + ' for the job ' + job_apply + '. This person is currently a ' + current_job + '.';
         sendEmailMessage('New Job Inquiry', emailContent);
       }
-      sendFBMessage(sender, responseText);
+      sendTextMessage(sender, responseText);
       break;
     default:
       //unhandled action, just send back the text
-      sendFBMessage(sender, responseText);
+      sendTextMessage(sender, responseText);
     break;
     }
+}
+
+function sendTextMessage(recipientId, text) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: text
+    }
+  }
+  callSendAPI(messageData);
 }
 
 function sendEmailMessage(emailSubject, content) {
