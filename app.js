@@ -39,6 +39,7 @@ function processEvent(event) {
             });
 
         apiaiRequest.on('response', (response) => {
+        	  sendTypingOff(sender);
             if (isDefined(response.result)) {
                 let responseText = response.result.fulfillment.speech;
                 let responseData = response.result.fulfillment.data;
@@ -168,10 +169,6 @@ function sendFBSenderAction(sender, action, callback) {
     }, 1000);
 }
 
-/*
- * Turn typing indicator on
- *
- */
 function sendTypingOn(recipientId) {
 
   var messageData = {
@@ -179,6 +176,18 @@ function sendTypingOn(recipientId) {
       id: recipientId
     },
     sender_action: "typing_on"
+  };
+
+  callSendAPI(messageData);
+}
+
+function sendTypingOff(recipientId) {
+
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    sender_action: "typing_off"
   };
 
   callSendAPI(messageData);
