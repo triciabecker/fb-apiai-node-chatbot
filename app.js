@@ -42,6 +42,8 @@ function processEvent(event) {
                 let responseText = response.result.fulfillment.speech;
                 let responseData = response.result.fulfillment.data;
                 let action = response.result.action;
+                let contexts = response.result.contexts;
+                let parameters = response.result.parameters;
 
                 if (isDefined(responseData) && isDefined(responseData.facebook)) {
                     if (!Array.isArray(responseData.facebook)) {
@@ -67,6 +69,8 @@ function processEvent(event) {
                             }
                         });
                     }
+                } else if (isDefined(action)) {
+                	handleApiAiAction(sender, action, responseText, contexts, parameters);
                 } else if (isDefined(responseText)) {
                     console.log('Response as text message');
                     // facebook API limit for text length is 320,
@@ -84,6 +88,57 @@ function processEvent(event) {
         apiaiRequest.on('error', (error) => console.error(error));
         apiaiRequest.end();
     }
+}
+
+function handleApiAiAction(sender, action, responseText, contexts, parameters) {
+  switch (action) {
+    case 'hiring-application-details':
+      if (isDefined(contexts[0]) && contexts[0].name == 'hiring-apply' && contexts[0].parameters) {
+        let user_name = (isDefined(contexts[0].parameters['user-name']) &&
+        (contexts[0].parameters['user-name'] !== '') ? contexts[0].parameters['user-name'] : 'No Name Provided.');
+        let job_apply = (isDefined(contexts[0].parameters['job-apply']) &&
+        (contexts[0].parameters['job-apply'] !== '') ? contexts[0].parameters['job-apply'] : 'No Job Position Provided.');
+        let current_job = (isDefined(contexts[0].parameters['current-job']) &&
+        (contexts[0].parameters['current-job'] !== '') ? contexts[0].parameters['current-job'] : 'No Previous Job Provided.');  
+
+        let emailContent = 'You have received a job inquiry from ' + user_name + ' for the job ' + job_apply + '. This person is currently a ' + current_job + '.';
+        sendEmailMessage('New Job Inquiry', emailContent);
+      }
+      sendFBMessage(sender, responseText);
+      break;
+    default:
+      //unhandled action, just send back the text
+      sendFBMessage(sender, responseText);
+    break;
+    }
+}
+
+function sendEmailMessage(emailSubject, content) {
+  console.log("The email subject is: " + emailSubject);
+  console.log("The email content is: " + content);
+  var helper = require('sendgrid').mail;
+    
+  var from_email = new helper.Email("katz.tricia@gmail.com");
+  var to_email = new helper.Email("katz.tricia@gmail.com");
+  var subject = emailSubject;
+  var content = new helper.Content("text/html", content);
+  var mail = new helper.Mail(from_email, subject, to_email, content);
+
+  var sg = require('sendgrid')(config.SENDGRID_API_KEY);
+  var request = sg.emptyRequest({
+    method: 'POST',
+    path: '/v3/mail/send',
+    body: mail.toJSON()
+  });
+
+  sg.API(request, function(error, response) {
+    console.log("Sendgrid Response: " + response);
+    console.log("Sendgrid Error: " + error);
+    console.log(response.statusCode);
+    console.log(response.body);
+    console.log(response.headers);
+  })
+
 }
 
 function splitResponse(str) {
