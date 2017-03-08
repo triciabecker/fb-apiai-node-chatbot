@@ -884,6 +884,8 @@ function sendEmailMessage(emailSubject, content) {
 	});
 
 	sg.API(request, function(error, response) {
+		console.log("Sendgrid Response: " + response);
+		console.log("Sendgrid Error: " + error);
 	  console.log(response.statusCode);
 	  console.log(response.body);
 	  console.log(response.headers);
