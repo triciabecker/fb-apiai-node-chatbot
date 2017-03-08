@@ -36,9 +36,8 @@ function processEvent(event) {
             {
                 sessionId: sessionIds.get(sender)
             });
-        var messageOne = sendTypingOn(sender);
 
-        messageOne.then(apiaiRequest.on('response', (response) => {
+        apiaiRequest.on('response', (response) => {
             if (isDefined(response.result)) {
                 let responseText = response.result.fulfillment.speech;
                 let responseData = response.result.fulfillment.data;
@@ -80,7 +79,7 @@ function processEvent(event) {
                 }
 
             }
-        }));
+        });
 
         apiaiRequest.on('error', (error) => console.error(error));
         apiaiRequest.end();
