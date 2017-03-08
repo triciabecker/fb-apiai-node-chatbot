@@ -15,7 +15,7 @@ const REST_PORT = (process.env.PORT || 5000);
 const APIAI_ACCESS_TOKEN = config.API_AI_CLIENT_ACCESS_TOKEN;
 const APIAI_LANG = config.API_AI_LANG || 'en';
 const FB_VERIFY_TOKEN = config.FB_VERIFY_TOKEN;
-const FB_PAGE_ACCESS_TOKEN = FB_PAGE_TOKEN;
+const FB_PAGE_ACCESS_TOKEN = config.FB_PAGE_TOKEN;
 
 const apiAiService = apiai(APIAI_ACCESS_TOKEN, {language: APIAI_LANG, requestSource: "fb"});
 const sessionIds = new Map();
