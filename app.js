@@ -867,7 +867,7 @@ function verifyRequestSignature(req, res, buf) {
 
 function sendEmailMessage(emailSubject, content) {
 	console.log("The email subject is: " + emailSubject);
-	console.log("The email content is: " + emailContent);
+	console.log("The email content is: " + content);
 	var helper = require('sendgrid').mail;
 	  
 	from_email = new helper.Email("tricia.katz@mutualmobile.com");
