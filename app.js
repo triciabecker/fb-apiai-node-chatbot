@@ -25,6 +25,7 @@ function processEvent(event) {
     if ((event.message && event.message.text) || (event.postback && event.postback.payload)) {
         var text = event.message ? event.message.text : event.postback.payload;
         // Handle a text message from this sender
+        sendTypingOn(sender);
 
         if (!sessionIds.has(sender)) {
             sessionIds.set(sender, uuid.v1());
@@ -69,7 +70,6 @@ function processEvent(event) {
                     }
                 } else if (isDefined(responseText)) {
                     console.log('Response as text message');
-                    sendTypingOn(sender);
                     // facebook API limit for text length is 320,
                     // so we must split message if needed
                     var splittedText = splitResponse(responseText);
