@@ -17,6 +17,7 @@
     "body-parser": "^1.15.1",
     "express": "^4.13.4",
     "request": "^2.72.0",
+    "sendgrid": "^4.7.1",
     "uuid": "^2.0.3"
   }
 }
