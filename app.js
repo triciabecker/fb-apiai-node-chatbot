@@ -43,7 +43,6 @@ function processEvent(event) {
                 let responseData = response.result.fulfillment.data;
                 let action = response.result.action;
 
-                sendTypingOn(sender);
                 if (isDefined(responseData) && isDefined(responseData.facebook)) {
                     if (!Array.isArray(responseData.facebook)) {
                         try {
@@ -70,6 +69,7 @@ function processEvent(event) {
                     }
                 } else if (isDefined(responseText)) {
                     console.log('Response as text message');
+                    sendTypingOn(sender);
                     // facebook API limit for text length is 320,
                     // so we must split message if needed
                     var splittedText = splitResponse(responseText);
