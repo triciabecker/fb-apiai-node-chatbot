@@ -174,16 +174,25 @@ function sendFBSenderAction(sender, action, callback) {
  *
  */
 function sendTypingOn(recipientId) {
+    request({
+        url: 'https://graph.facebook.com/v2.6/me/messages',
+        qs: {access_token: FB_PAGE_ACCESS_TOKEN},
+        method: 'POST',
+        json: {
+            recipient: {id: sender},
+            sender_action: "typing_on"
+        }
+    }, (error, response, body) => {
+        if (error) {
+            console.log('Error sending message: ', error);
+        } else if (response.body.error) {
+            console.log('Error: ', response.body.error);
+        }
 
-
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    sender_action: "typing_on"
-  };
-
-  sendFBMessage(recipientId, messageData);
+        if (callback) {
+            callback();
+        }
+    });
 }
 
 function doSubscribeRequest() {
