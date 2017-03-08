@@ -49,9 +49,9 @@ function processEvent(event) {
                     if (!Array.isArray(responseData.facebook)) {
                         try {
                             console.log('Response as formatted message');
-                            sendFBMessage(sender, responseData.facebook);
+                            sendTextMessage(sender, responseData.facebook);
                         } catch (err) {
-                            sendFBMessage(sender, {text: err.message});
+                            sendTextMessage(sender, {text: err.message});
                         }
                     } else {
                         responseData.facebook.forEach((facebookMessage) => {
@@ -62,10 +62,10 @@ function processEvent(event) {
                                 }
                                 else {
                                     console.log('Response as formatted message');
-                                    sendFBMessage(sender, facebookMessage);
+                                    sendTextMessage(sender, facebookMessage);
                                 }
                             } catch (err) {
-                                sendFBMessage(sender, {text: err.message});
+                                sendTextMessage(sender, {text: err.message});
                             }
                         });
                     }
@@ -73,13 +73,14 @@ function processEvent(event) {
                 	handleApiAiAction(sender, action, responseText, contexts, parameters);
                 } else if (isDefined(responseText)) {
                     console.log('Response as text message');
-                    // facebook API limit for text length is 320,
-                    // so we must split message if needed
-                    var splittedText = splitResponse(responseText);
+                    sendTextMessage(sender, responseText);
+                    // // facebook API limit for text length is 320,
+                    // // so we must split message if needed
+                    // var splittedText = splitResponse(responseText);
 
-                    async.eachSeries(splittedText, (textPart, callback) => {
-                        sendFBMessage(sender, {text: textPart}, callback);
-                    });
+                    // async.eachSeries(splittedText, (textPart, callback) => {
+                    //     sendFBMessage(sender, {text: textPart}, callback);
+                    // });
                 }
 
             }
@@ -189,27 +190,27 @@ function chunkString(s, len) {
     return output;
 }
 
-function sendFBMessage(sender, messageData, callback) {
-    request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token: FB_PAGE_ACCESS_TOKEN},
-        method: 'POST',
-        json: {
-            recipient: {id: sender},
-            message: messageData
-        }
-    }, (error, response, body) => {
-        if (error) {
-            console.log('Error sending message: ', error);
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error);
-        }
+// function sendFBMessage(sender, messageData, callback) {
+//     request({
+//         url: 'https://graph.facebook.com/v2.6/me/messages',
+//         qs: {access_token: FB_PAGE_ACCESS_TOKEN},
+//         method: 'POST',
+//         json: {
+//             recipient: {id: sender},
+//             message: messageData
+//         }
+//     }, (error, response, body) => {
+//         if (error) {
+//             console.log('Error sending message: ', error);
+//         } else if (response.body.error) {
+//             console.log('Error: ', response.body.error);
+//         }
 
-        if (callback) {
-            callback();
-        }
-    });
-}
+//         if (callback) {
+//             callback();
+//         }
+//     });
+// }
 
 function sendFBSenderAction(sender, action, callback) {
     setTimeout(() => {
