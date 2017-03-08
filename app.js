@@ -30,9 +30,7 @@ function processEvent(event) {
             sessionIds.set(sender, uuid.v1());
         }
 
-        console.log("Text", text);
-				
-				sendTypingOn(sender);        
+        console.log("Text", text);    
 
         let apiaiRequest = apiAiService.textRequest(text,
             {
@@ -45,6 +43,7 @@ function processEvent(event) {
                 let responseData = response.result.fulfillment.data;
                 let action = response.result.action;
 
+                sendTypingOn(sender);
                 if (isDefined(responseData) && isDefined(responseData.facebook)) {
                     if (!Array.isArray(responseData.facebook)) {
                         try {
