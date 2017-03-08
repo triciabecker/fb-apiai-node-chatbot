@@ -38,7 +38,7 @@ function processEvent(event) {
             });
         var messageOne = sendTypingOn(sender);
 
-        var messageTwo = messageOne.then(apiaiRequest.on('response', (response) => {
+        messageOne.then(apiaiRequest.on('response', (response) => {
             if (isDefined(response.result)) {
                 let responseText = response.result.fulfillment.speech;
                 let responseData = response.result.fulfillment.data;
@@ -81,8 +81,6 @@ function processEvent(event) {
 
             }
         }));
-
-				messageTwo.then(sendTypingOff(sender));
 
         apiaiRequest.on('error', (error) => console.error(error));
         apiaiRequest.end();
