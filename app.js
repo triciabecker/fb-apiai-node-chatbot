@@ -5,7 +5,6 @@ const config = require('./config');
 const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
-const app = express();
 const uuid = require('node-uuid');
 const request = require('request');
 const JSONbig = require('json-bigint');
