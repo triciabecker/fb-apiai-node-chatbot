@@ -174,25 +174,42 @@ function sendFBSenderAction(sender, action, callback) {
  *
  */
 function sendTypingOn(recipientId) {
-    request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token: FB_PAGE_ACCESS_TOKEN},
-        method: 'POST',
-        json: {
-            recipient: {id: sender},
-            sender_action: "typing_on"
-        }
-    }, (error, response, body) => {
-        if (error) {
-            console.log('Error sending message: ', error);
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error);
-        }
 
-        if (callback) {
-            callback();
-        }
-    });
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    sender_action: "typing_on"
+  };
+
+  callSendAPI(messageData);
+}
+
+function callSendAPI(messageData) {
+  request({
+    uri: 'https://graph.facebook.com/v2.6/me/messages',
+    qs: {
+      access_token: FB_PAGE_ACCESS_TOKEN
+    },
+    method: 'POST',
+    json: messageData
+
+  }, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      var recipientId = body.recipient_id;
+      var messageId = body.message_id;
+
+      if (messageId) {
+        console.log("Successfully sent message with id %s to recipient %s",
+          messageId, recipientId);
+      } else {
+        console.log("Successfully called Send API for recipient %s",
+          recipientId);
+      }
+    } else {
+      console.error("Failed calling Send API", response.statusCode, response.statusMessage, body.error);
+    }
+  });
 }
 
 function doSubscribeRequest() {
