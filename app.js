@@ -25,7 +25,6 @@ function processEvent(event) {
     if ((event.message && event.message.text) || (event.postback && event.postback.payload)) {
         var text = event.message ? event.message.text : event.postback.payload;
         // Handle a text message from this sender
-        sendTypingOn(sender);
 
         if (!sessionIds.has(sender)) {
             sessionIds.set(sender, uuid.v1());
@@ -37,8 +36,9 @@ function processEvent(event) {
             {
                 sessionId: sessionIds.get(sender)
             });
+        var messageOne = sendTypingOn(sender);
 
-        apiaiRequest.on('response', (response) => {
+        var messageTwo = messageOne.then(apiaiRequest.on('response', (response) => {
             if (isDefined(response.result)) {
                 let responseText = response.result.fulfillment.speech;
                 let responseData = response.result.fulfillment.data;
@@ -80,10 +80,11 @@ function processEvent(event) {
                 }
 
             }
-        });
+        }));
+
+				messageTwo.then(sendTypingOff(sender));
 
         apiaiRequest.on('error', (error) => console.error(error));
-        sendTypingOff(sender);
         apiaiRequest.end();
     }
 }
