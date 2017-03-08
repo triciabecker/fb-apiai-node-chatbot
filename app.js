@@ -22,6 +22,8 @@ const sessionIds = new Map();
 function processEvent(event) {
     var sender = event.sender.id.toString();
 
+    sendTypingOff(sender);
+
     if ((event.message && event.message.text) || (event.postback && event.postback.payload)) {
         var text = event.message ? event.message.text : event.postback.payload;
         // Handle a text message from this sender
@@ -31,7 +33,8 @@ function processEvent(event) {
         }
 
         console.log("Text", text);    
-
+        sendTypingOn(sender);
+        
         let apiaiRequest = apiAiService.textRequest(text,
             {
                 sessionId: sessionIds.get(sender)
