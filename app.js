@@ -20,7 +20,6 @@ const apiAiService = apiai(APIAI_ACCESS_TOKEN, {language: "en", requestSource: "
 const sessionIds = new Map();
 
 function processEvent(event) {
-		console.log("I am in the process event function");
     var sender = event.sender.id.toString();
 
     if ((event.message && event.message.text) || (event.postback && event.postback.payload)) {
@@ -130,7 +129,8 @@ function sendFBMessage(sender, messageData, callback) {
         method: 'POST',
         json: {
             recipient: {id: sender},
-            message: messageData
+            message: messageData,
+            sender_action: "typing_on"
         }
     }, (error, response, body) => {
         if (error) {
@@ -221,8 +221,7 @@ app.post('/webhook/', (req, res) => {
                 if (messaging_events) {
                     messaging_events.forEach((event) => {
                         if (event.message) {
-                        		console.log("READY TO PROCESS EVENT");
-                            processEvent(event);
+                        	processEvent(event);
                         }
                     });
                 }
