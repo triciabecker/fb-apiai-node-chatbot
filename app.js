@@ -13,14 +13,14 @@ const async = require('async');
 
 const REST_PORT = (process.env.PORT || 5000);
 const APIAI_ACCESS_TOKEN = config.API_AI_CLIENT_ACCESS_TOKEN;
-const APIAI_LANG = config.API_AI_LANG || 'en';
 const FB_VERIFY_TOKEN = config.FB_VERIFY_TOKEN;
 const FB_PAGE_ACCESS_TOKEN = config.FB_PAGE_TOKEN;
 
-const apiAiService = apiai(APIAI_ACCESS_TOKEN, {language: APIAI_LANG, requestSource: "fb"});
+const apiAiService = apiai(APIAI_ACCESS_TOKEN, {language: "en", requestSource: "fb"});
 const sessionIds = new Map();
 
 function processEvent(event) {
+		console.log("I am in the process event function");
     var sender = event.sender.id.toString();
 
     if ((event.message && event.message.text) || (event.postback && event.postback.payload)) {
@@ -220,8 +220,8 @@ app.post('/webhook/', (req, res) => {
                 let messaging_events = entry.messaging;
                 if (messaging_events) {
                     messaging_events.forEach((event) => {
-                        if (event.message && !event.message.is_echo ||
-                            event.postback && event.postback.payload) {
+                        if (event.message) {
+                        		console.log("READY TO PROCESS EVENT");
                             processEvent(event);
                         }
                     });
