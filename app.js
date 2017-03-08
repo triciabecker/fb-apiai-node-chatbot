@@ -185,7 +185,7 @@ function handleEcho(messageId, appId, metadata) {
 function handleApiAiAction(sender, action, responseText, contexts, parameters) {
 	switch (action) {
 		case 'hiring-application-details':
-			if (isDefined(contexts[0] && contexts[0].name == 'hiring-apply' && contexts[0].parameters)) {
+			if (isDefined(contexts[0]) && contexts[0].name == 'hiring-apply' && contexts[0].parameters) {
 				let user_name = (isDefined(contexts[0].parameters['user-name']) &&
 				(contexts[0].parameters['user-name'] !== '') ? contexts[0].parameters['user-name'] : 'No Name Provided.');
 				let job_apply = (isDefined(contexts[0].parameters['job-apply']) &&
@@ -196,7 +196,6 @@ function handleApiAiAction(sender, action, responseText, contexts, parameters) {
 				let emailContent = 'You have received a job inquiry from ' + user_name + ' for the job ' + job_apply + '. This person is currently a ' + current_job + '.';
 				sendEmailMessage('New Job Inquiry', emailContent);		
 			}
-
 			sendTextMessage(sender, responseText);
 			break;
 		default:
@@ -206,29 +205,6 @@ function handleApiAiAction(sender, action, responseText, contexts, parameters) {
 		}
 }
 
-function sendEmailMessage(emailSubject, content) {
-	var helper = require('sendgrid').mail;
-	  
-	from_email = new helper.Email("tricia.katz@mutualmobile.com");
-	to_email = new helper.Email("tricia.katz@mutualmobile.com");
-	subject = emailSubject;
-	content = new helper.Content("text/html", content);
-	mail = new helper.Mail(from_email, subject, to_email, content);
-
-	var sg = require('sendgrid')(config.SENDGRID_API_KEY);
-	var request = sg.emptyRequest({
-	  method: 'POST',
-	  path: '/v3/mail/send',
-	  body: mail.toJSON()
-	});
-
-	sg.API(request, function(error, response) {
-	  console.log(response.statusCode);
-	  console.log(response.body);
-	  console.log(response.headers);
-	})
-
-}
 
 function handleMessage(message, sender) {
 	switch (message.type) {
@@ -887,6 +863,32 @@ function verifyRequestSignature(req, res, buf) {
 			throw new Error("Couldn't validate the request signature.");
 		}
 	}
+}
+
+function sendEmailMessage(emailSubject, content) {
+	console.log("The email subject is: " + emailSubject);
+	console.log("The email content is: " + emailContent);
+	var helper = require('sendgrid').mail;
+	  
+	from_email = new helper.Email("tricia.katz@mutualmobile.com");
+	to_email = new helper.Email("tricia.katz@mutualmobile.com");
+	subject = emailSubject;
+	content = new helper.Content("text/html", content);
+	mail = new helper.Mail(from_email, subject, to_email, content);
+
+	var sg = require('sendgrid')(config.SENDGRID_API_KEY);
+	var request = sg.emptyRequest({
+	  method: 'POST',
+	  path: '/v3/mail/send',
+	  body: mail.toJSON()
+	});
+
+	sg.API(request, function(error, response) {
+	  console.log(response.statusCode);
+	  console.log(response.body);
+	  console.log(response.headers);
+	})
+
 }
 
 function isDefined(obj) {
