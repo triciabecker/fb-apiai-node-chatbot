@@ -870,8 +870,8 @@ function sendEmailMessage(emailSubject, content) {
 	console.log("The email content is: " + content);
 	var helper = require('sendgrid').mail;
 	  
-	var from_email = new helper.Email("tricia.katz@mutualmobile.com");
-	var to_email = new helper.Email("tricia.katz@mutualmobile.com");
+	var from_email = new helper.Email("katz.tricia@gmail.com");
+	var to_email = new helper.Email("katz.tricia@gmail.com");
 	var subject = emailSubject;
 	var content = new helper.Content("text/html", content);
 	var mail = new helper.Mail(from_email, subject, to_email, content);
