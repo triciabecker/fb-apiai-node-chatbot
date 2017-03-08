@@ -31,6 +31,8 @@ function processEvent(event) {
         }
 
         console.log("Text", text);
+				
+				sendTypingOn(sender);        
 
         let apiaiRequest = apiAiService.textRequest(text,
             {
@@ -129,8 +131,7 @@ function sendFBMessage(sender, messageData, callback) {
         method: 'POST',
         json: {
             recipient: {id: sender},
-            message: messageData,
-            sender_action: "typing_on"
+            message: messageData
         }
     }, (error, response, body) => {
         if (error) {
@@ -166,6 +167,23 @@ function sendFBSenderAction(sender, action, callback) {
             }
         });
     }, 1000);
+}
+
+/*
+ * Turn typing indicator on
+ *
+ */
+function sendTypingOn(recipientId) {
+
+
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    sender_action: "typing_on"
+  };
+
+  sendFBMessage(recipientId, messageData);
 }
 
 function doSubscribeRequest() {
